@@ -39,4 +39,5 @@ if (process.env.NODE_ENV === 'production') {
 	)
 }
 
+//make it available
 module.exports = config;

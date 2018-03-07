@@ -8,13 +8,15 @@ var Link = require("react-router-dom").Link;
 
 //----- My Container Components -------
 var Api = require("./../utils/Api");
-var Loading = require('./Loading');
+var Loading = require("./Loading");
 
-//sfc Item - weather icon and date
+//sfc Forecast List Item - weather icon and date
 function ForecastListItem(props) {
 	return (
 		<ul className="fli_ul">
-			<li><img src={props.icon} /></li>
+			<li>
+				<img src={props.icon} />
+			</li>
 			<li>{props.date}</li>
 		</ul>
 	);
@@ -22,13 +24,16 @@ function ForecastListItem(props) {
 
 //Forecast List - parent list of items, running across the page
 class ForecastList extends React.Component {
-
 	render() {
-
 		function getDate(the_date) {
 			var workingdate = new Date(the_date);
-			var options = { weekday: 'short', month: 'long', day: 'numeric', hour: '2-digit' };
-			return workingdate.toLocaleDateString('en-UK', options);
+			var options = {
+				weekday: "short",
+				month: "long",
+				day: "numeric",
+				hour: "2-digit"
+			};
+			return workingdate.toLocaleDateString("en-UK", options);
 		}
 
 		var citystate = this.props.citystate;
@@ -39,25 +44,28 @@ class ForecastList extends React.Component {
 		return (
 			<ul className="fl_ul">
 				{this.props.items.map(function(item) {
-					console.log(item);
-					iconURL = "http://openweathermap.org/img/w/" + item.weather[0].icon + ".png";
+					//prepare information that will be sent when below Link is clicked. Sent as state.
+					iconURL =
+						"http://openweathermap.org/img/w/" +
+						item.weather[0].icon +
+						".png";
 					sendDate = getDate(item.dt_txt);
 					detailsLink = {
-							pathname: "/details",
-							state: {
-								citystate: citystate,
-								description: item.weather[0].description,
-								mintemp: item.main.temp_min,
-								maxtemp: item.main.temp_max,
-								humidity: item.main.humidity,
-								icon: iconURL,
-								datedesc: sendDate
-							}
+						pathname: "/details",
+						state: {
+							citystate: citystate,
+							description: item.weather[0].description,
+							mintemp: item.main.temp_min,
+							maxtemp: item.main.temp_max,
+							humidity: item.main.humidity,
+							icon: iconURL,
+							datedesc: sendDate
 						}
+					};
 
 					return (
-						<li>
-							<Link exact to={detailsLink}>
+						<li key={item.dt_txt}>
+							<Link to={detailsLink}>
 								<ForecastListItem
 									date={sendDate}
 									icon={iconURL}
@@ -72,7 +80,7 @@ class ForecastList extends React.Component {
 	}
 }
 
-//main component
+//main Forecast component
 class Forecast extends React.Component {
 	constructor(props) {
 		super(props);
@@ -80,9 +88,10 @@ class Forecast extends React.Component {
 		this.state = {
 			fiveDays: null,
 			results_list: null,
+			loading: true,
+			error: null,
 			citystate: queryString.parse(this.props.location.search).citystate
 		};
-
 	}
 
 	componentDidMount() {
@@ -90,11 +99,24 @@ class Forecast extends React.Component {
 	}
 
 	getFiveDays(citystate) {
+		//send an api call to OpenWeatherMap, using the city/state string provided by user
 		Api.fiveDay(citystate).then(
 			function(results) {
+				if (results === null) {
+					return this.setState(function() {
+						return {
+							results_list: null,
+							error:
+								"Oops - looks like there was an issue. Sure that city / state exists?",
+							loading: false
+						};
+					});
+				}
 				this.setState(function() {
 					return {
-						results_list: results.data.list
+						results_list: results.data.list,
+						error: null,
+						loading: false
 					};
 				});
 			}.bind(this)
@@ -103,16 +125,20 @@ class Forecast extends React.Component {
 
 	render() {
 		return (
-			<div className='forecast-container'>
+			<div className="forecast-container">
 				<h1>{this.state.citystate}</h1>
-				{!this.state.results_list 
-					? <Loading />
-					: <ForecastList
+
+				{this.state.loading === true && <Loading />}
+
+				{this.state.error && <h1>{this.state.error}</h1>}
+
+				{this.state.results_list && (
+					<ForecastList
 						items={this.state.results_list}
 						key={this.state.results_list}
 						citystate={this.state.citystate}
-					  />
-				}
+					/>
+				)}
 			</div>
 		);
 	}

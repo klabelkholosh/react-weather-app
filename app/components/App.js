@@ -11,6 +11,7 @@ var InputContainer = require("./InputContainer");
 var Forecast = require("./Forecast");
 var Details = require("./Details");
 
+//main app
 class App extends React.Component {
 	render() {
 		return (
@@ -33,4 +34,5 @@ class App extends React.Component {
 	}
 }
 
+//make it available
 module.exports = App;

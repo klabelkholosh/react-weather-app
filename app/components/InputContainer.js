@@ -4,6 +4,7 @@ var React = require('react');
 //----- My Container Components -------
 var InputForm = require('./InputForm');
 
+//InputContainer, which should be the first page a user is presented with when initially visiting the site
 class InputContainer extends React.Component {
 	render() {
 		return (
