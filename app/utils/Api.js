@@ -2,7 +2,7 @@ var React = require("react");
 var Axios = require("axios");
 
 //my api key... hmm.
-const apiKey = "f14652fffa94ad7ef04fe2468a6a9da4";
+const _APIKEY = "f14652fffa94ad7ef04fe2468a6a9da4";
 
 //if we have an issue, return null to caller
 function handleError(error) {
@@ -16,7 +16,7 @@ module.exports = {
 			"https://api.openweathermap.org/data/2.5/forecast?q=" +
 				citystate +
 				"&appid=" +
-				apiKey
+				_APIKEY
 		);
 
 		return Axios.get(encodedURI)
