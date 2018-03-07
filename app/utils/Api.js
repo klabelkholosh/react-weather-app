@@ -9,6 +9,7 @@ function handleError(error) {
 	return null;
 }
 
+//make it available, plus functionality!
 module.exports = {
 	fiveDay: function(citystate) {
 		var encodedURI = encodeURI(

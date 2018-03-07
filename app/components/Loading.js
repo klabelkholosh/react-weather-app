@@ -1,17 +1,19 @@
-var React = require('react');
-var PropTypes = require('prop-types');
+//----- React Components --------
+var React = require("react");
+var PropTypes = require("prop-types");
 
+// Loading style
 var styles = {
 	content: {
-		textAlign: 'center',
-		fontWeight: '100',
-		fontSize: '35px'
+		textAlign: "center",
+		fontWeight: "100",
+		fontSize: "35px"
 	}
-}
+};
 
+//Loading component. Uses an interval timer that ticks at default 300ms speed to show concurrent dots being added to whatever text chosen.
 class Loading extends React.Component {
-
-	constructor (props) {
+	constructor(props) {
 		super(props);
 
 		this.state = {
@@ -20,23 +22,26 @@ class Loading extends React.Component {
 	}
 
 	componentDidMount() {
-		var stopper = this.props.text + '...';
+		var stopper = this.props.text + "...";
 
-		this.interval = window.setInterval(function () {
-			if (this.state.text === stopper) {
-				this.setState( function() {
-					return {
-						text: this.props.text
-					}
-				})
-			} else {
-				this.setState(function(prevState) {
-					return {
-						text: prevState.text + '.'
-					}
-				});
-			}
-		}.bind(this), this.props.speed);
+		this.interval = window.setInterval(
+			function() {
+				if (this.state.text === stopper) {
+					this.setState(function() {
+						return {
+							text: this.props.text
+						};
+					});
+				} else {
+					this.setState(function(prevState) {
+						return {
+							text: prevState.text + "."
+						};
+					});
+				}
+			}.bind(this),
+			this.props.speed
+		);
 	}
 
 	componentWillUnmount() {
@@ -44,11 +49,7 @@ class Loading extends React.Component {
 	}
 
 	render() {
-		return (
-			<p style={styles.content}>
-				{this.state.text}
-			</p>
-		)
+		return <p style={styles.content}>{this.state.text}</p>;
 	}
 }
 
@@ -58,8 +59,9 @@ Loading.propTypes = {
 };
 
 Loading.defaultProps = {
-	text: 'Loading',
+	text: "Loading",
 	speed: 300
-}
+};
 
+//make it available
 module.exports = Loading;
