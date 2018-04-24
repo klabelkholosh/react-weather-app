@@ -14,23 +14,27 @@ class InputForm extends React.Component {
 		};
 
 		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	//ensure city/state state is exactly what user has typed
 	handleChange(event) {
 		let value = event.target.value;
-		this.setState( function () {
+		this.setState(function() {
 			return {
 				citystate: value
-			}
+			};
 		});
 	}
 
+	handleSubmit(event) {
+		event.preventDefault();
+		this.props.onSubmit(
+			this.state.citystate
+		)
+	}
+
 	render() {
-
-		//this is the route where the user is sent to once city/state is entered and button below clicked
-		var forecastLink = "/forecast?citystate=" + this.state.citystate;
-
 		return (
 			<div>
 				<form
@@ -39,6 +43,7 @@ class InputForm extends React.Component {
 							? "columnForm"
 							: "rowForm"
 					}
+					onSubmit={this.handleSubmit}
 				>
 					<h1>{this.props.children}</h1>
 					<input
@@ -48,9 +53,7 @@ class InputForm extends React.Component {
 						className="if_input"
 						onChange={this.handleChange}
 					/>
-					<NavLink to={forecastLink}>
-						<button className="if_button">Get Weather</button>
-					</NavLink>
+					<button type='submit' className="if_button">{this.props.buttontext}</button>
 				</form>
 			</div>
 		);
@@ -58,11 +61,15 @@ class InputForm extends React.Component {
 }
 
 InputForm.propTypes = {
-	flexdir: PropTypes.string
+	flexdir: PropTypes.string,
+	onSubmit: PropTypes.func.isRequired,
+	citystate: PropTypes.string.isRequired,
+	buttontext: PropTypes.string
 };
 
 InputForm.defaultProps = {
-	flexdir: "column"
+	flexdir: "column",
+	buttontext: "Submit"
 };
 
 //make it available

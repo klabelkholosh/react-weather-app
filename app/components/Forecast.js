@@ -26,7 +26,8 @@ function ForecastListItem(props) {
 class ForecastList extends React.Component {
 	render() {
 		function getDate(the_date) {
-			var workingdate = new Date(the_date);
+			
+			var workingdate = new Date(the_date.replace(/-/g, "/"));
 			var options = {
 				weekday: "short",
 				month: "long",
