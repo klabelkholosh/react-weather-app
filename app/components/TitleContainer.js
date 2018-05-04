@@ -33,12 +33,6 @@ class TitleContainer extends React.Component {
 		return (
 			<div className="TitleContainer">
 				<h1>ReactWeatherApp</h1>
-				<InputForm
-					key="title_input"
-					flexdir="row"
-					buttontext="Get Weather"
-					onSubmit={this.handleSubmit}
-				/>
 				{fireRedirect && <Redirect exact to={theURL} key='from-title' />}
 			</div>
 		);
